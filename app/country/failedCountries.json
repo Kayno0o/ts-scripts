@@ -1,0 +1,80 @@
+[
+  {
+    "name": "Antarctica",
+    "alpha2": "AQ",
+    "alpha3": "ATA",
+    "country_code": "010",
+    "iso31665": "ISO 3166-2:AQ",
+    "region": "NULL",
+    "sub_region": "NULL",
+    "intermediate_region": "NULL",
+    "region_code": "NULL",
+    "sub_region_code": "NULL",
+    "intermediate_region_code": "NULL"
+  },
+  {
+    "name": "British Indian Ocean Territory",
+    "alpha2": "IO",
+    "alpha3": "IOT",
+    "country_code": "086",
+    "iso31665": "ISO 3166-2:IO",
+    "region": "Africa",
+    "sub_region": "Sub-Saharan Africa",
+    "intermediate_region": "Eastern Africa",
+    "region_code": "002",
+    "sub_region_code": "202",
+    "intermediate_region_code": "014"
+  },
+  {
+    "name": "Heard Island and McDonald Islands",
+    "alpha2": "HM",
+    "alpha3": "HMD",
+    "country_code": "334",
+    "iso31665": "ISO 3166-2:HM",
+    "region": "Oceania",
+    "sub_region": "Australia and New Zealand",
+    "intermediate_region": "NULL",
+    "region_code": "009",
+    "sub_region_code": "053",
+    "intermediate_region_code": "NULL"
+  },
+  {
+    "name": "Saint Martin (French part)",
+    "alpha2": "MF",
+    "alpha3": "MAF",
+    "country_code": "663",
+    "iso31665": "ISO 3166-2:MF",
+    "region": "Americas",
+    "sub_region": "Latin America and the Caribbean",
+    "intermediate_region": "Caribbean",
+    "region_code": "019",
+    "sub_region_code": "419",
+    "intermediate_region_code": "029"
+  },
+  {
+    "name": "Svalbard and Jan Mayen",
+    "alpha2": "SJ",
+    "alpha3": "SJM",
+    "country_code": "744",
+    "iso31665": "ISO 3166-2:SJ",
+    "region": "Europe",
+    "sub_region": "Northern Europe",
+    "intermediate_region": "NULL",
+    "region_code": "150",
+    "sub_region_code": "154",
+    "intermediate_region_code": "NULL"
+  },
+  {
+    "name": "United States Minor Outlying Islands",
+    "alpha2": "UM",
+    "alpha3": "UMI",
+    "country_code": "581",
+    "iso31665": "ISO 3166-2:UM",
+    "region": "Oceania",
+    "sub_region": "Micronesia",
+    "intermediate_region": "NULL",
+    "region_code": "009",
+    "sub_region_code": "057",
+    "intermediate_region_code": "NULL"
+  }
+]
