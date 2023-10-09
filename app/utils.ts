@@ -1,3 +1,12 @@
+/**
+ * Calculates the distance between two points on the Earth's surface using the Haversine formula.
+ *
+ * @param {number} lat1 - The latitude of the first point in degrees.
+ * @param {number} lon1 - The longitude of the first point in degrees.
+ * @param {number} lat2 - The latitude of the second point in degrees.
+ * @param {number} lon2 - The longitude of the second point in degrees.
+ * @returns {number} The distance between the two points in kilometers, rounded to the nearest integer.
+ */
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   if (lat1 === lat2 && lon1 === lon2) {
     return 0
@@ -19,15 +28,109 @@ function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   }
 }
 
-function orderByDistance(items: Array<{ lat: number; lng: number; distance?: number }>, pos: { lat: number; lng: number }) {
-  items.forEach((item) => {
-    const distance = getDistance(pos.lat, pos.lng, item.lat, item.lng)
-    item.distance = distance
-  })
+/**
+ * Map a value from a range to another
+ *
+ * @param {number} value The value to map
+ * @param {number} imin Min input value
+ * @param {number} imax Max input value
+ * @param {number} omin Min output value
+ * @param {number} omax Max output value
+ * @returns {number} Computed value
+ */
+export function map(value: number, imin: number, imax: number, omin: number, omax: number): number {
+  return omin + (omax - omin) * ((value - imin) / (imax - imin))
+}
 
-  items.sort((a, b) => {
-    return a.distance - b.distance
-  })
+/**
+ * Return a number between min and max. If no max given, return a number between 0 and min
+ *
+ * @param {number} min Min value
+ * @param {number} max Max value
+ * @returns {number} Random number
+ */
+export function randomInt(min: number, max: number | null = null): number {
+  return Math.floor(Math.random() * (max ? max - min : min) + (max ? min : 0))
+}
 
-  return items
+export function msDurationToTime(duration: number) {
+  const seconds = Math.floor((duration / 1000) % 60)
+  const minutes = Math.floor((duration / 1000 / 60) % 60)
+  const hours = Math.floor((duration / (1000 * 60 * 60)) % 24)
+  const days = Math.floor(duration / (1000 * 60 * 60 * 24))
+
+  return `${days > 0 ? `${days}j ` : ''}${hours > 0 ? `${hours}h ` : ''}${minutes}m ${
+    seconds < 10 ? `0${seconds}` : seconds
+  }s`
+}
+
+export function msDurationToTimeObject(duration: number) {
+  const seconds = Math.floor((duration / 1000) % 60)
+  const minutes = Math.floor((duration / 1000 / 60) % 60)
+  const hours = Math.floor((duration / (1000 * 60 * 60)) % 24)
+  const days = Math.floor(duration / (1000 * 60 * 60 * 24))
+
+  return { days, hours, minutes, seconds }
+}
+
+export function shuffleArray(array: any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]
+  }
+}
+
+export function getDateFromDayMonth(day: number, month: number): Date {
+  const date = new Date()
+  date.setMonth(month - 1)
+  date.setDate(day)
+  return date
+}
+
+export function getNextDateFromDayMonth(day: number, month: number): Date {
+  const date = getDateFromDayMonth(day, month)
+  if (date.getTime() < Date.now())
+    date.setFullYear(date.getFullYear() + 1)
+
+  return date
+}
+
+export function diffTime(dateFrom: Date, dateTo: Date): number {
+  return Math.abs(dateTo.getTime() - dateFrom.getTime())
+}
+
+export function startOfDay(date: Date): Date {
+  date.setHours(0, 0, 0, 0)
+  return date
+}
+
+export function startOfToday() {
+  return startOfDay(new Date())
+}
+
+export function randomString(length: number): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let text = ''
+
+  for (let i = 0; i < length; i++)
+    text += chars.charAt(Math.floor(Math.random() * chars.length))
+
+  return text
+}
+
+export function isLink(str: string): boolean {
+  const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+  return regex.test(str)
+}
+
+export function hexToRgb(hex: string): [number, number, number] {
+  const r = Number.parseInt(hex.slice(1, 3), 16)
+  const g = Number.parseInt(hex.slice(3, 5), 16)
+  const b = Number.parseInt(hex.slice(5, 7), 16)
+
+  return [r, g, b]
+}
+
+export function rgbToHex(rgb: [number, number, number]): string {
+  return `#${((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1)}`
 }
