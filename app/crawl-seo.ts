@@ -7,7 +7,7 @@ let crawlUrl = 'http://localhost:3000'
 const baseUrl = new URL(crawlUrl)
 
 let ignoreRobots = false
-let ignorePages = []
+let ignorePages: Array<string> = []
 
 const args = process.argv.slice(2)
 
@@ -92,7 +92,7 @@ async function crawl(url: string) {
     if (href.includes('_'))
       console.error(`Page ${href} has underscores in the url`)
 
-    const externalLinks = document.querySelectorAll('a[href^="http"]')
+    const externalLinks = document.querySelectorAll('a[href^="http"]') as NodeListOf<HTMLAnchorElement>
     for (const link of externalLinks) {
       const rel = link.getAttribute('rel')
       if (!rel || !(rel.includes('nofollow') || rel.includes('noreferrer') || rel.includes('noopener')))
