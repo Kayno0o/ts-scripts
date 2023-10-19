@@ -7,7 +7,7 @@
  * @param {number} lon2 - The longitude of the second point in degrees.
  * @returns {number} The distance between the two points in kilometers, rounded to the nearest integer.
  */
-function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+export function getDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   if (lat1 === lat2 && lon1 === lon2) {
     return 0
   }
@@ -53,7 +53,7 @@ export function randomInt(min: number, max: number | null = null): number {
   return Math.floor(Math.random() * (max ? max - min : min) + (max ? min : 0))
 }
 
-export function msDurationToTime(duration: number) {
+export function msDurationToTime(duration: number): string {
   const seconds = Math.floor((duration / 1000) % 60)
   const minutes = Math.floor((duration / 1000 / 60) % 60)
   const hours = Math.floor((duration / (1000 * 60 * 60)) % 24)
@@ -64,7 +64,7 @@ export function msDurationToTime(duration: number) {
   }s`
 }
 
-export function msDurationToTimeObject(duration: number) {
+export function msDurationToTimeObject(duration: number): { days: number; hours: number; minutes: number; seconds: number } {
   const seconds = Math.floor((duration / 1000) % 60)
   const minutes = Math.floor((duration / 1000 / 60) % 60)
   const hours = Math.floor((duration / (1000 * 60 * 60)) % 24)
@@ -73,7 +73,7 @@ export function msDurationToTimeObject(duration: number) {
   return { days, hours, minutes, seconds }
 }
 
-export function shuffleArray(array: any[]) {
+export function shuffleArray(array: Array<any>) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]]
@@ -104,7 +104,7 @@ export function startOfDay(date: Date): Date {
   return date
 }
 
-export function startOfToday() {
+export function startOfToday(): Date {
   return startOfDay(new Date())
 }
 
@@ -133,4 +133,25 @@ export function hexToRgb(hex: string): [number, number, number] {
 
 export function rgbToHex(rgb: [number, number, number]): string {
   return `#${((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1)}`
+}
+
+export function deepEqual(arr1: Array<any>, arr2: Array<any>): boolean {
+  if (arr1.length !== arr2.length)
+    return false
+
+  return arr1.every((val, index) => {
+    const val2 = arr2[index]
+
+    if (Array.isArray(val) || Array.isArray(val2)) {
+      if (!Array.isArray(val))
+        return false
+
+      if (!Array.isArray(val2))
+        return false
+
+      return deepEqual(val, val2)
+    }
+
+    return val === val2
+  })
 }
