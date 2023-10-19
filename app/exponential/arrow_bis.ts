@@ -1,36 +1,35 @@
-import { Tile } from './arrow';
+import type { Tile } from './arrow'
 
 class ArrowPuzzleBis {
-  board: Tile[][];
-  size: number;
+  board: Tile[][]
+  size: number
 
   constructor(size: number) {
-    this.size = size;
-    this.board = this.createBoard(size);
-    this.shuffleBoard();
+    this.size = size
+    this.board = this.createBoard(size)
+    this.shuffleBoard()
   }
 
   createBoard(size: number, num: Tile = 1): Tile[][] {
-    let board: Tile[][] = [];
+    const board: Tile[][] = []
 
     for (let i = 0; i < size; i++) {
-      let row: Tile[] = [];
-      for (let j = 0; j < size; j++) {
-        row.push(num);
-      }
-      board.push(row);
+      const row: Tile[] = []
+      for (let j = 0; j < size; j++)
+        row.push(num)
+
+      board.push(row)
     }
 
-    return board;
+    return board
   }
 
   shuffleBoard(): void {
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
-        let randomClicks = Math.floor(Math.random() * 4);
-        for (let k = 0; k < randomClicks; k++) {
-          this.clickTile(i, j);
-        }
+        const randomClicks = Math.floor(Math.random() * 4)
+        for (let k = 0; k < randomClicks; k++)
+          this.clickTile(i, j)
       }
     }
   }
@@ -46,112 +45,103 @@ class ArrowPuzzleBis {
       [1, -1],
       [1, 0],
       [1, 1],
-    ];
+    ]
 
     for (const [dr, dc] of directions) {
-      let newRow = row + dr;
-      let newCol = col + dc;
+      const newRow = row + dr
+      const newCol = col + dc
 
-      if (newRow >= 0 && newRow < this.size && newCol >= 0 && newCol < this.size) {
-        this.board[newRow][newCol] = ((this.board[newRow][newCol] % 4) + 1) as Tile;
-      }
+      if (newRow >= 0 && newRow < this.size && newCol >= 0 && newCol < this.size)
+        this.board[newRow][newCol] = ((this.board[newRow][newCol] % 4) + 1) as Tile
     }
   }
 
   printBoard(): void {
-    console.table(this.board);
+    console.table(this.board)
   }
 
   boardKey(): string {
-    return this.board.map((row) => row.join('')).join('/');
+    return this.board.map(row => row.join('')).join('/')
   }
 
   solve(): void {
-    const visited = new Set<string>();
-    const moves: [number, number][] = [];
+    const visited = new Set<string>()
+    const moves: [number, number][] = []
 
     for (let maxDepth = 1; maxDepth <= this.size * this.size; maxDepth++) {
       if (this.iddfs(visited, moves, this.board, 0, maxDepth)) {
-        console.log(`Solved in ${moves.length} moves:`);
-        const moveBoard = this.createBoard(this.size, 0 as Tile);
-        for (const [row, col] of moves) {
-          moveBoard[row][col]++;
-        }
-        console.table(moveBoard);
-        break;
+        console.log(`Solved in ${moves.length} moves:`)
+        const moveBoard = this.createBoard(this.size, 0 as Tile)
+        for (const [row, col] of moves)
+          moveBoard[row][col]++
+
+        console.table(moveBoard)
+        break
       }
-      visited.clear();
+      visited.clear()
     }
   }
 
   iddfs(visited: Set<string>, moves: [number, number][], board: Tile[][], depth: number, maxDepth: number): boolean {
-    if (this.isBoardSolved(board)) {
-      return true;
-    }
+    if (this.isBoardSolved(board))
+      return true
 
-    if (depth >= maxDepth) {
-      return false;
-    }
+    if (depth >= maxDepth)
+      return false
 
-    const boardKey = this.boardKeyFromBoard(board);
-    if (visited.has(boardKey)) {
-      return false;
-    }
+    const boardKey = this.boardKeyFromBoard(board)
+    if (visited.has(boardKey))
+      return false
 
-    visited.add(boardKey);
+    visited.add(boardKey)
 
     for (let row = 0; row < this.size; row++) {
       for (let col = 0; col < this.size; col++) {
-        moves.push([row, col]);
-        const newBoard = this.copyBoard(board);
-        this.clickTileOnBoard(newBoard, row, col);
+        moves.push([row, col])
+        const newBoard = this.copyBoard(board)
+        this.clickTileOnBoard(newBoard, row, col)
 
-        if (this.iddfs(visited, moves, newBoard, depth + 1, maxDepth)) {
-          return true;
-        }
+        if (this.iddfs(visited, moves, newBoard, depth + 1, maxDepth))
+          return true
 
-        moves.pop();
+        moves.pop()
       }
     }
 
-    return false;
+    return false
   }
 
   dfs(visited: Set<string>, moves: [number, number][], board: Tile[][], depth: number, maxDepth: number): boolean {
-    if (this.isBoardSolved(board)) {
-      return true;
-    }
+    if (this.isBoardSolved(board))
+      return true
 
-    if (depth >= maxDepth) {
-      return false;
-    }
+    if (depth >= maxDepth)
+      return false
 
-    const boardKey = this.boardKeyFromBoard(board);
-    if (visited.has(boardKey)) {
-      return false;
-    }
+    const boardKey = this.boardKeyFromBoard(board)
+    if (visited.has(boardKey))
+      return false
 
-    visited.add(boardKey);
+    visited.add(boardKey)
 
     for (let row = 0; row < this.size; row++) {
       for (let col = 0; col < this.size; col++) {
-        moves.push([row, col]);
-        const newBoard = this.copyBoard(board);
-        this.clickTileOnBoard(newBoard, row, col);
+        moves.push([row, col])
+        const newBoard = this.copyBoard(board)
+        this.clickTileOnBoard(newBoard, row, col)
 
-        if (this.dfs(visited, moves, newBoard, depth + 1, maxDepth)) {
-          return true;
-        }
+        if (this.dfs(visited, moves, newBoard, depth + 1, maxDepth))
+          return true
 
-        moves.pop();
+        moves.pop()
       }
     }
 
-    return false;
+    return false
   }
 
   copyBoard(board: Tile[][]): Tile[][] {
-    return board.map((row) => row.slice());
+    return board.map(row => row.slice())
   }
 
   clickTileOnBoard(board: Tile[][], row: number, col: number): void {
@@ -165,45 +155,43 @@ class ArrowPuzzleBis {
       [1, -1],
       [1, 0],
       [1, 1],
-    ];
+    ]
 
     for (const [dr, dc] of directions) {
-      let newRow = row + dr;
-      let newCol = col + dc;
+      const newRow = row + dr
+      const newCol = col + dc
 
-      if (newRow >= 0 && newRow < this.size && newCol >= 0 && newCol < this.size) {
-        board[newRow][newCol] = ((board[newRow][newCol] % 4) + 1) as Tile;
-      }
+      if (newRow >= 0 && newRow < this.size && newCol >= 0 && newCol < this.size)
+        board[newRow][newCol] = ((board[newRow][newCol] % 4) + 1) as Tile
     }
   }
 
   isBoardSolved(board: Tile[][]): boolean {
     for (const row of board) {
       for (const tile of row) {
-        if (tile !== 1) {
-          return false;
-        }
+        if (tile !== 1)
+          return false
       }
     }
-    return true;
+    return true
   }
 
   boardKeyFromBoard(board: Tile[][]): string {
-    return board.map((row) => row.join('')).join('/');
+    return board.map(row => row.join('')).join('/')
   }
 }
 
 (() => {
-  const size = 4;
-  const arrowPuzzle = new ArrowPuzzleBis(size);
-  console.log('Initial board:');
-  arrowPuzzle.printBoard();
+  const size = 4
+  const arrowPuzzle = new ArrowPuzzleBis(size)
+  console.log('Initial board:')
+  arrowPuzzle.printBoard()
 
   // const customBoard: Array<Tile> = [4, 2, 4, 4, 4, 4, 3, 2, 4, 2, 2, 4, 4, 3, 3, 4];
   // arrowPuzzle.board = splitArray(customBoard, size);
-  console.log('Custom board:');
-  arrowPuzzle.printBoard();
+  console.log('Custom board:')
+  arrowPuzzle.printBoard()
 
-  console.log('Solving the board...');
-  arrowPuzzle.solve();
-})();
+  console.log('Solving the board...')
+  arrowPuzzle.solve()
+})()
