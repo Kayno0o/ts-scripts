@@ -12,8 +12,6 @@ function advancedTower(nFloors: number, nBlockSz: [number, number]): Array<strin
   return res
 }
 
-export function testAdvancedTower() {
-  console.log(advancedTower(1, [2, 1]))
-  console.log(advancedTower(1, [2, 3]))
-  console.log(advancedTower(3, [2, 3]))
-}
+console.log(advancedTower(1, [2, 1]))
+console.log(advancedTower(1, [2, 3]))
+console.log(advancedTower(3, [2, 3]))

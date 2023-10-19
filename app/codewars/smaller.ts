@@ -1,8 +1,8 @@
 import { deepEqual } from '../utils'
 
-function smaller(nums) {
+function smaller(nums): Array<number> {
   const dic: { [key: number]: number } = {}
-  const arr = []
+  const arr: Array<number> = []
 
   for (let i = nums.length - 1; i >= 0; i--) {
     const n: number = nums[i]
@@ -20,21 +20,19 @@ function smaller(nums) {
   return arr
 }
 
-export function testSmaller() {
-  const arr = []
+const arr: Array<number> = []
 
-  for (let i = 0; i < 10000; i++)
-    arr.push(Math.floor(Math.random() * 1000))
+for (let i = 0; i < 10000; i++)
+  arr.push(Math.floor(Math.random() * 1000))
 
-  console.time('time')
+console.time('time')
 
-  smaller(arr)
+smaller(arr)
 
-  console.timeEnd('time')
+console.timeEnd('time')
 
-  console.log(deepEqual(smaller([5, 4, 3, 2, 1]), [4, 3, 2, 1, 0]))
-  console.log(deepEqual(smaller([1, 2, 3]), [0, 0, 0]))
-  console.log(deepEqual(smaller([1, 2, 0]), [1, 1, 0]))
-  console.log(deepEqual(smaller([1, 2, 1]), [0, 1, 0]))
-  console.log(deepEqual(smaller([1, 1, -1, 0, 0]), [3, 3, 0, 0, 0]))
-}
+console.log(deepEqual(smaller([5, 4, 3, 2, 1]), [4, 3, 2, 1, 0]))
+console.log(deepEqual(smaller([1, 2, 3]), [0, 0, 0]))
+console.log(deepEqual(smaller([1, 2, 0]), [1, 1, 0]))
+console.log(deepEqual(smaller([1, 2, 1]), [0, 1, 0]))
+console.log(deepEqual(smaller([1, 1, -1, 0, 0]), [3, 3, 0, 0, 0]))

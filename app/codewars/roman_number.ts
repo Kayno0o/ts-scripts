@@ -16,15 +16,13 @@ function solution(n: number): string {
   return r
 }
 
-(() => {
-  // console.time('roman')
-  // for (let i = 0; i < 10000000; i++)
-  //   solution(randomInt(2000))
+// console.time('roman')
+// for (let i = 0; i < 10000000; i++)
+//   solution(randomInt(2000))
 
-  // console.timeEnd('roman')
+// console.timeEnd('roman')
 
-  console.log(solution(182), 'CLXXXII')
-  console.log(solution(1990), 'MCMXC')
-  console.log(solution(1875), 'MDCCCLXXV')
-  console.log(solution(1463), 'MCDLXIII')
-})()
+console.log(solution(182), 'CLXXXII')
+console.log(solution(1990), 'MCMXC')
+console.log(solution(1875), 'MDCCCLXXV')
+console.log(solution(1463), 'MCDLXIII')

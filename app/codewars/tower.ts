@@ -10,8 +10,6 @@ function tower(n: number): Array<string> {
   return res
 }
 
-export function testTower() {
-  console.log(tower(1))
-  console.log(tower(3))
-  console.log(tower(6))
-}
+console.log(tower(1))
+console.log(tower(3))
+console.log(tower(6))
