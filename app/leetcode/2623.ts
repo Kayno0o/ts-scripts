@@ -1,19 +1,15 @@
 type Fn = (...params: any) => any
 
 function memoize(fn: Fn): Fn {
-  const cache: Array<{ key: Array<any>; val: any }> = []
+  const cache: Map<string, any> = new Map()
 
   return function (...args) {
-    let item = cache.find(c => c.key.every((val, index) => val === args[index]))
+    const key = args.join(',')
 
-    if (item === undefined) {
-      item = {
-        key: args,
-        val: fn(...args),
-      }
-      cache.push(item)
-    }
-    return item.val
+    if (!cache.has(key))
+      cache.set(key, fn(...args))
+
+    return cache.get(key)
   }
 }
 
@@ -22,10 +18,12 @@ const memoizedFn = memoize((...arr: Array<number>) => {
   callCount++
   return arr.reduce((a, b) => (a + b), 0)
 })
+
 memoizedFn()
 memoizedFn(1)
 memoizedFn(1)
 memoizedFn()
+memoizedFn(1, 2, 32409832, 42309743098824, 923784890304)
 memoizedFn(1, 2)
-memoizedFn(1, 2)
+
 console.log('callCount', callCount)

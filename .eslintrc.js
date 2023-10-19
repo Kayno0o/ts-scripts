@@ -4,5 +4,6 @@ module.exports = {
   ],
   rules: {
     'no-console': 'off',
+    'no-extend-native': 'off',
   },
 }
