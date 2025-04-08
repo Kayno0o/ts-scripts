@@ -1,13 +1,13 @@
 import { URL } from 'node:url'
-import fetch from 'node-fetch'
 import { JSDOM } from 'jsdom'
+import fetch from 'node-fetch'
 
 const visitedPages = new Set()
 let crawlUrl = 'http://localhost:3000'
 const baseUrl = new URL(crawlUrl)
 
 let ignoreRobots = false
-let ignorePages: Array<string> = []
+let ignorePages: string[] = []
 
 const args = process.argv.slice(2)
 

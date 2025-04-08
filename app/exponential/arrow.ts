@@ -66,7 +66,7 @@ class ArrowPuzzle {
 
   solve(): void {
     const visited = new Set<string>()
-    const queue: { board: Tile[][]; moves: [number, number][] }[] = []
+    const queue: { board: Tile[][], moves: [number, number][] }[] = []
 
     visited.add(this.boardKey())
     queue.push({ board: this.copyBoard(this.board), moves: [] })
@@ -154,7 +154,7 @@ export function splitArray(arr: any[], size: number): any[][] {
   console.log('Initial board:')
   arrowPuzzle.printBoard()
 
-  const customBoard: Array<Tile> = [4, 2, 4, 4, 4, 4, 3, 2, 4, 2, 2, 4, 4, 3, 3, 4]
+  const customBoard: Tile[] = [4, 2, 4, 4, 4, 4, 3, 2, 4, 2, 2, 4, 4, 3, 3, 4]
   arrowPuzzle.board = splitArray(customBoard, size)
   console.log('Custom board:')
   arrowPuzzle.printBoard()

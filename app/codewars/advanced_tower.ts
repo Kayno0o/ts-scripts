@@ -1,6 +1,6 @@
-function advancedTower(nFloors: number, nBlockSz: [number, number]): Array<string> {
+function advancedTower(nFloors: number, nBlockSz: [number, number]): string[] {
   const [bw, bh] = nBlockSz
-  const res: Array<string> = []
+  const res: string[] = []
 
   for (let i = 0; i < nFloors; i++) {
     const spacing = ' '.repeat((nFloors - 1 - i) * bw)

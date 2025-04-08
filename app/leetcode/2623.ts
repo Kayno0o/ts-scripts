@@ -1,7 +1,7 @@
 type Fn = (...params: any) => any
 
 function memoize(fn: Fn): Fn {
-  const cache: Map<string, any> = new Map()
+  const cache = new Map<string, any>()
 
   return function (...args) {
     const key = args.join(',')
@@ -14,7 +14,7 @@ function memoize(fn: Fn): Fn {
 }
 
 let callCount = 0
-const memoizedFn = memoize((...arr: Array<number>) => {
+const memoizedFn = memoize((...arr: number[]) => {
   callCount++
   return arr.reduce((a, b) => (a + b), 0)
 })

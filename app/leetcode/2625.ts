@@ -1,6 +1,6 @@
 type MultiDimensionalArray = (number | MultiDimensionalArray)[]
 
-const flat = function (arr: MultiDimensionalArray, n: number): MultiDimensionalArray {
+function flat(arr: MultiDimensionalArray, n: number): MultiDimensionalArray {
   if (n === 0)
     return arr
 

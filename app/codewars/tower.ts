@@ -1,5 +1,5 @@
-function tower(n: number): Array<string> {
-  const res: Array<string> = []
+function tower(n: number): string[] {
+  const res: string[] = []
 
   for (let i = 0; i < n; i++) {
     const spacing = ' '.repeat(n - 1 - i)

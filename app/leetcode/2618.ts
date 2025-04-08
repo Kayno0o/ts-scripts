@@ -1,8 +1,8 @@
-const checkIfInstanceOf = function (obj, classFunction) {
+function checkIfInstanceOf(obj, classFunction) {
   if (obj === null || obj === undefined || typeof classFunction !== 'function')
     return false
 
-  return Object(obj) instanceof classFunction
+  return new Object(obj) instanceof classFunction
 }
 
 console.log(checkIfInstanceOf(new Date(), Date))

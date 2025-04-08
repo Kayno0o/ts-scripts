@@ -1,7 +1,7 @@
 type Digit = '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
 
 function letterCombinations(digits: string): string[] {
-  const pad: { [key in Digit]: Array<string> } = {
+  const pad: Record<Digit, string[]> = {
     2: ['a', 'b', 'c'],
     3: ['d', 'e', 'f'],
     4: ['g', 'h', 'i'],
@@ -12,8 +12,8 @@ function letterCombinations(digits: string): string[] {
     9: ['w', 'x', 'y', 'z'],
   }
 
-  function combine(arr1: Array<string>, arr2: Array<string>): Array<string> {
-    const o: Array<string> = []
+  function combine(arr1: string[], arr2: string[]): string[] {
+    const o: string[] = []
     for (let i = 0; i < arr1.length; i++) {
       for (let j = 0; j < arr2.length; j++)
         o.push(arr1[i] + arr2[j])
@@ -21,8 +21,8 @@ function letterCombinations(digits: string): string[] {
     return o
   }
 
-  const args = digits.split('') as Array<Digit>
-  let o: Array<string> = pad[args[0]] || []
+  const args = digits.split('') as Digit[]
+  let o: string[] = pad[args[0]] || []
   for (let i = 1; i < args.length; i++)
     o = combine(o, pad[args[i]])
 

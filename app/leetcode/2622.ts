@@ -1,4 +1,4 @@
-const TimeLimitedCache = function () {
+function TimeLimitedCache() {
   this.cache = new Map()
 }
 

@@ -1,4 +1,4 @@
-function longestConsec(arr: Array<string>, k: number): string {
+function longestConsec(arr: string[], k: number): string {
   if (k <= 0 || k > arr.length)
     return ''
 

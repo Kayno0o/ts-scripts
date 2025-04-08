@@ -1,14 +1,13 @@
 import { deepEqual } from '../utils'
 
-function smaller(nums): Array<number> {
-  const dic: { [key: number]: number } = {}
-  const arr: Array<number> = []
+function smaller(nums): number[] {
+  const dic: Record<number, number> = {}
+  const arr: number[] = []
 
   for (let i = nums.length - 1; i >= 0; i--) {
     const n: number = nums[i]
 
-    if (!dic[n])
-      dic[n] = 0
+    dic[n] ||= 0
 
     const v = Object.keys(dic).reduce((acc, curr) => (Number(curr) < n ? (acc += dic[curr]) : acc), 0)
 
@@ -20,7 +19,7 @@ function smaller(nums): Array<number> {
   return arr
 }
 
-const arr: Array<number> = []
+const arr: number[] = []
 
 for (let i = 0; i < 10000; i++)
   arr.push(Math.floor(Math.random() * 1000))

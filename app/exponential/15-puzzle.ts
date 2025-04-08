@@ -1,5 +1,5 @@
 class PuzzlePriorityQueue<T> {
-  private data: Array<{ item: T; priority: number }> = []
+  private data: { item: T, priority: number }[] = []
 
   enqueue(item: T, priority: number): void {
     this.data.push({ item, priority })
@@ -17,7 +17,7 @@ class PuzzlePriorityQueue<T> {
 
 interface BoardState {
   board: number[][]
-  emptyPos: { col: number; row: number }
+  emptyPos: { col: number, row: number }
   manhattanDistance: number
   moves: string[]
 }
@@ -25,7 +25,7 @@ interface BoardState {
 class Puzzle {
   private board: number[][]
   private size: number
-  private emptyPos: { col: number; row: number }
+  private emptyPos: { col: number, row: number }
 
   constructor(size: number) {
     this.size = size

@@ -1,4 +1,4 @@
-const twoSum = function (nums: Array<number>, target: number) {
+function twoSum(nums: number[], target: number) {
   for (let i = 0; i < nums.length; i++) {
     const element = nums[i]
     const index = nums.indexOf(target - element)

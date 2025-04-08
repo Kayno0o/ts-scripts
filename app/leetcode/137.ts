@@ -1,4 +1,4 @@
-const singleNumber = function (nums) {
+function singleNumber(nums) {
   const a = new Map()
   for (let i = 0; i < nums.length; i++) {
     if (!a.has(nums[i]))

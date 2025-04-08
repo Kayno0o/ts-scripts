@@ -144,8 +144,8 @@ class Torus {
   }
 
   aStar(): string[] {
-    const openSet = new TorusPriorityQueue<{ board: number[][]; cost: number; heuristic: number; moves: string[] }>()
-    const closedSet: Set<string> = new Set()
+    const openSet = new TorusPriorityQueue<{ board: number[][], cost: number, heuristic: number, moves: string[] }>()
+    const closedSet = new Set<string>()
 
     openSet.enqueue(
       {
@@ -220,7 +220,7 @@ class Torus {
 }
 
 class TorusPriorityQueue<T> {
-  private items: { priority: number; value: T }[]
+  private items: { priority: number, value: T }[]
 
   constructor() {
     this.items = []

@@ -11,21 +11,20 @@ export function getDistance(lat1: number, lon1: number, lat2: number, lon2: numb
   if (lat1 === lat2 && lon1 === lon2) {
     return 0
   }
-  else {
-    const radlat1 = (Math.PI * lat1) / 180
-    const radlat2 = (Math.PI * lat2) / 180
-    const theta = lon1 - lon2
-    const radtheta = (Math.PI * theta) / 180
-    let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta)
-    if (dist > 1)
-      dist = 1
 
-    dist = Math.acos(dist)
-    dist = (dist * 180) / Math.PI
-    dist = dist * 60 * 1.1515
-    dist = dist * 1.609344
-    return Math.round(dist)
-  }
+  const radlat1 = (Math.PI * lat1) / 180
+  const radlat2 = (Math.PI * lat2) / 180
+  const theta = lon1 - lon2
+  const radtheta = (Math.PI * theta) / 180
+  let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta)
+  if (dist > 1)
+    dist = 1
+
+  dist = Math.acos(dist)
+  dist = (dist * 180) / Math.PI
+  dist = dist * 60 * 1.1515
+  dist *= 1.609344
+  return Math.round(dist)
 }
 
 /**
@@ -64,7 +63,7 @@ export function msDurationToTime(duration: number): string {
   }s`
 }
 
-export function msDurationToTimeObject(duration: number): { days: number; hours: number; minutes: number; seconds: number } {
+export function msDurationToTimeObject(duration: number): { days: number, hours: number, minutes: number, seconds: number } {
   const seconds = Math.floor((duration / 1000) % 60)
   const minutes = Math.floor((duration / 1000 / 60) % 60)
   const hours = Math.floor((duration / (1000 * 60 * 60)) % 24)
@@ -73,7 +72,7 @@ export function msDurationToTimeObject(duration: number): { days: number; hours:
   return { days, hours, minutes, seconds }
 }
 
-export function shuffleArray(array: Array<any>) {
+export function shuffleArray(array: any[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]]
@@ -119,7 +118,7 @@ export function randomString(length: number): string {
 }
 
 export function isLink(str: string): boolean {
-  const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+  const regex = /(http|https):\/\/(\w+(?::\w*)?@)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%@\-/]))?/
   return regex.test(str)
 }
 
@@ -135,7 +134,7 @@ export function rgbToHex(rgb: [number, number, number]): string {
   return `#${((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1)}`
 }
 
-export function deepEqual(arr1: Array<any>, arr2: Array<any>): boolean {
+export function deepEqual(arr1: any[], arr2: any[]): boolean {
   if (arr1.length !== arr2.length)
     return false
 

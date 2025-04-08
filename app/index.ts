@@ -15,7 +15,8 @@ function fetchRevisions(): Promise<number> {
     fetch('https://admin-prototype.caramaps.org/api/offmaps/66692f65-83e6-4d7f-b77b-3f996a772a3e/revisions', options)
       .then(() => {
         resolve(1)
-      }).catch(() => {
+      })
+      .catch(() => {
         resolve(0)
       })
   })

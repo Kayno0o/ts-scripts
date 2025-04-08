@@ -17,8 +17,7 @@ Array.prototype.snail = function (rowsCount: number, colsCount: number): number[
 
     const y = i % rowsCount
     const pos = (d ? y : rowsCount - y - 1)
-    if (!arr[pos])
-      arr[pos] = []
+    arr[pos] ||= []
     arr[pos][x] = this[i]
   }
   return arr
