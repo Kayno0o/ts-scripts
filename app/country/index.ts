@@ -1,10 +1,9 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { JSDOM } from 'jsdom'
-import nodefetch from 'node-fetch'
 
 interface TranslationCountry {
-  translations: { [lang: string]: string }
+  translations: Record<string, string>
 }
 
 interface ExportCountry {
@@ -20,11 +19,11 @@ interface ExportCountry {
   sub_region_code: string
   intermediate_region_code: string
 
-  t_country: Array<{
+  t_country: {
     translatable_id: number
     locale: string
     name: string
-  }>
+  }[]
 }
 
 interface Country extends ExportCountry {
@@ -32,7 +31,7 @@ interface Country extends ExportCountry {
 }
 
 async function fetchHTML() {
-  const links: Array<string> = [
+  const links: string[] = [
     'https://en.wikipedia.org/wiki/List_of_country_names_in_various_languages_(A%E2%80%93C)',
     'https://en.wikipedia.org/wiki/List_of_country_names_in_various_languages_(D%E2%80%93I)',
     'https://en.wikipedia.org/wiki/List_of_country_names_in_various_languages_(J%E2%80%93P)',
@@ -41,10 +40,13 @@ async function fetchHTML() {
 
   let html = ''
 
-  for (let i = 0; i < links.length; i++)
-    html += await nodefetch(links[i], {}).then((res: any) => res.text())
+  for (const link of links) {
+    const res = await fetch(link)
+    const text = await res.text()
+    html += text
+  }
 
-  fs.writeFileSync(path.join(__dirname, 'links.html'), html)
+  fs.writeFileSync(path.join(__dirname, 'out', 'links.html'), html)
 
   return html
 }
@@ -97,9 +99,11 @@ async function parseHTML() {
     { name: 'Turkish', iso: 'tr' },
   ]
 
-  const parsedCountries: { [en: string]: TranslationCountry } = {}
+  const parsedCountries: Record<string, TranslationCountry> = {}
 
-  let html: string | undefined = fs.readFileSync(path.join(__dirname, 'links.html')).toString()
+  const linkFilename = path.join(__dirname, 'out', 'links.html')
+
+  let html: string | undefined = fs.existsSync(linkFilename) ? fs.readFileSync(linkFilename).toString() : undefined
 
   if (!html) {
     console.log('-- fetching --')
@@ -111,15 +115,16 @@ async function parseHTML() {
 
   let count = 0
 
-  doc.querySelectorAll('table.wikitable tr').forEach((tr) => {
+  const trs = doc.querySelectorAll('table.wikitable tr')
+  for (const tr of trs) {
     const a = tr.querySelector('a[title]')
     if (!a)
-      return
+      continue
 
     const countryName = a.getAttribute('title')
 
     if (!countryName)
-      return
+      continue
 
     count++
 
@@ -129,65 +134,74 @@ async function parseHTML() {
       },
     }
 
-    languages.forEach((lang) => {
-      tr.querySelectorAll(`[lang=${lang.iso}]`).forEach((element) => {
+    for (const lang of languages) {
+      const elements = tr.querySelectorAll(`[lang=${lang.iso}]`)
+      for (const element of elements) {
         country.translations[lang.iso] = element.textContent || ''
-      })
-    })
+      }
+    }
 
-    tr.querySelectorAll('td').forEach((td) => {
-      td.querySelectorAll('span[title]').forEach((span) => {
+    const tds = tr.querySelectorAll('td') as NodeListOf<HTMLTableCellElement>
+    for (let tdIndex = 0; tdIndex < tds.length; tdIndex++) {
+      const td = tds.item(tdIndex)
+      const spans = td.querySelectorAll('span[title]') as NodeListOf<HTMLSpanElement>
+      for (let spanIndex = 0; spanIndex < spans.length; spanIndex++) {
+        const span = spans.item(spanIndex)
         const regex = new RegExp(`${span.outerHTML}(.*?)?<`)
         const matches = td.innerHTML.match(regex)
-        matches?.forEach((match, index) => {
-          if (index !== 0)
-            return
+        if (matches) {
+          for (let i = 0; i < matches.length; i++) {
+            if (i !== 0)
+              continue
 
-          const text = span.querySelector('[lang]')?.textContent
+            const text = span.querySelector('[lang]')?.textContent
 
-          if (!text)
-            return
+            if (!text)
+              continue
 
-          languages.forEach((lang) => {
-            if (!match.includes(lang.name) || country.translations[lang.iso])
-              return
+            const match = matches[i]
 
-            country.translations[lang.iso] = text
-          })
-        })
-      })
-    })
+            for (const lang of languages) {
+              if (!match.includes(lang.name) || country.translations[lang.iso]) {
+                continue
+              }
+
+              country.translations[lang.iso] = text
+            }
+          }
+        }
+      }
+    }
 
     parsedCountries[countryName] = country
-  })
+  }
+
   console.log(count)
 
   fs.writeFileSync(
-    path.join(__dirname, 'translations.json'),
+    path.join(__dirname, 'out', 'translations.json'),
     JSON.stringify(parsedCountries, undefined, 2),
   )
 }
 
 async function parseCountries() {
-  const countries: Array<Country> = JSON.parse(fs.readFileSync(path.join(__dirname, './countries.json')).toString())
-  const parsedCountries: {
-    [en: string]: TranslationCountry
-  } = JSON.parse(fs.readFileSync(path.join(__dirname, './translations.json')).toString())
+  const countries: Country[] = JSON.parse(fs.readFileSync(path.join(__dirname, './countries.json')).toString())
+  const parsedCountries: Record<string, TranslationCountry> = JSON.parse(fs.readFileSync(path.join(__dirname, 'out', './translations.json')).toString())
 
-  const outputCountries: Array<ExportCountry> = []
-  const failedCountries: Array<Country> = []
+  const outputCountries: ExportCountry[] = []
+  const failedCountries: Country[] = []
 
   let count = 1
   let failed = 0
 
-  countries.forEach((country) => {
+  for (const country of countries) {
     if (parsedCountries[country.name]) {
       const translations = Object.entries(
         parsedCountries[country.name].translations,
       ).map(([key, value]) => ({
         translatable_id: count,
         locale: key,
-        name: value,
+        name: value.trim(),
       }))
 
       const outputCountry: ExportCountry = {
@@ -215,11 +229,11 @@ async function parseCountries() {
       failedCountries.push(country)
       failed++
     }
-  })
+  }
 
-  fs.writeFileSync(path.join(__dirname, 'exportedCountries.json'), JSON.stringify(outputCountries, undefined, 2))
-  fs.writeFileSync(path.join(__dirname, 'failedCountries.json'), JSON.stringify(failedCountries, undefined, 2))
-  fs.writeFileSync(path.join(__dirname, 'failedTranslations.json'), JSON.stringify(parsedCountries, undefined, 2))
+  fs.writeFileSync(path.join(__dirname, 'out', 'exportedCountries.json'), JSON.stringify(outputCountries, undefined, 2))
+  fs.writeFileSync(path.join(__dirname, 'out', 'failedCountries.json'), JSON.stringify(failedCountries, undefined, 2))
+  fs.writeFileSync(path.join(__dirname, 'out', 'failedTranslations.json'), JSON.stringify(parsedCountries, undefined, 2))
 
   console.log('failed', failed)
 }
@@ -232,7 +246,7 @@ function nullableString(str: string) {
 }
 
 function SQLcountries() {
-  const countries: Array<ExportCountry> = JSON.parse(fs.readFileSync(path.join(__dirname, './exportedCountries.json')).toString())
+  const countries: ExportCountry[] = JSON.parse(fs.readFileSync(path.join(__dirname, 'out', './exportedCountries.json')).toString())
 
   const countriesSQL = `INSERT INTO country(id, alpha2, alpha3, country_code, iso31665, region, sub_region, intermediate_region, region_code, sub_region_code, intermediate_region_code)\nVALUES (${[
     countries
@@ -256,7 +270,7 @@ function SQLcountries() {
     .join('),\n       (')})`
 
   fs.writeFileSync(
-    path.join(__dirname, 'countries.sql'),
+    path.join(__dirname, 'out', 'countries.sql'),
     `CREATE TABLE country
 (
     id                       INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -280,14 +294,14 @@ CREATE TABLE t_country
     name            VARCHAR(255),
     FOREIGN KEY (translatable_id) REFERENCES country (id)
 );\n\n${
-    countriesSQL
-    }\n\n${
-    translationsSQL}`,
+  countriesSQL
+}\n\n${
+  translationsSQL}`,
   )
 }
 
 (async () => {
-  // await parseHTML()
+  await parseHTML()
   await parseCountries()
   SQLcountries()
 })()

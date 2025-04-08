@@ -1066,7 +1066,7 @@
     "intermediate_region_code": "011"
   },
   {
-    "name": "Georgia (country)",
+    "name": "Georgia",
     "alpha2": "GE",
     "alpha3": "GEO",
     "country_code": "268",
@@ -2821,7 +2821,7 @@
     "intermediate_region_code": "NULL"
   },
   {
-    "name": "Free Area of the Republic of China",
+    "name": "Taiwan",
     "alpha2": "TW",
     "alpha3": "TWN",
     "country_code": "158",
@@ -3055,7 +3055,7 @@
     "intermediate_region_code": "NULL"
   },
   {
-    "name": "United States",
+    "name": "United States of America",
     "alpha2": "US",
     "alpha3": "USA",
     "country_code": "840",
