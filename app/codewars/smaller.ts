@@ -1,6 +1,6 @@
-import { deepEqual } from '../utils'
+import { deepEquals } from 'bun'
 
-function smaller(nums): number[] {
+function smaller(nums: number[]): number[] {
   const dic: Record<number, number> = {}
   const arr: number[] = []
 
@@ -9,7 +9,7 @@ function smaller(nums): number[] {
 
     dic[n] ||= 0
 
-    const v = Object.keys(dic).reduce((acc, curr) => (Number(curr) < n ? (acc += dic[curr]) : acc), 0)
+    const v = Object.keys(dic).reduce((acc, curr) => (Number(curr) < n ? (acc += dic[Number(curr)]) : acc), 0)
 
     arr.unshift(v)
 
@@ -30,8 +30,8 @@ smaller(arr)
 
 console.timeEnd('time')
 
-console.log(deepEqual(smaller([5, 4, 3, 2, 1]), [4, 3, 2, 1, 0]))
-console.log(deepEqual(smaller([1, 2, 3]), [0, 0, 0]))
-console.log(deepEqual(smaller([1, 2, 0]), [1, 1, 0]))
-console.log(deepEqual(smaller([1, 2, 1]), [0, 1, 0]))
-console.log(deepEqual(smaller([1, 1, -1, 0, 0]), [3, 3, 0, 0, 0]))
+console.log(deepEquals(smaller([5, 4, 3, 2, 1]), [4, 3, 2, 1, 0]))
+console.log(deepEquals(smaller([1, 2, 3]), [0, 0, 0]))
+console.log(deepEquals(smaller([1, 2, 0]), [1, 1, 0]))
+console.log(deepEquals(smaller([1, 2, 1]), [0, 1, 0]))
+console.log(deepEquals(smaller([1, 1, -1, 0, 0]), [3, 3, 0, 0, 0]))
