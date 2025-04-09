@@ -1,10 +1,19 @@
-const text = 'THSWQD THZ RBXP GWXP HG XL ZWRNBRHK UTPQ WQ KBQZBQ, W THZ SWRWGPZ GTP IOWGWRT XMRPMX, HQZ XHZP RPHOFT HXBQD GTP IBBVR HQZ XHNR WQ GTP KWIOHOL OPDHOZWQD GOHQRLKSHQWH; WG THZ RGOMFV XP GTHG RBXP ABOPVQBUKPZDP BA GTP FBMQGOL FBMKZ THOZKL AHWK GB THSP RBXP WXNBOGHQFP WQ ZPHKWQD UWGT H QBIKPXHQ BA GTHG FBMQGOL.'
-const text2 = 'GOHQRLKSHQWH'
+import { colors } from '@kaynooo/utils'
 
-let o = ''
-let o2 = ''
+const text = `
+THSWQD THZ RBXP GWXP HG XL ZWRNBRHK UTPQ WQ KBQZBQ,
+W THZ SWRWGPZ GTP IOWGWRT XMRPMX, HQZ XHZP RPHOFT
+HXBQD GTP IBBVR HQZ XHNR WQ GTP KWIOHOL OPDHOZWQD
+GOHQRLKSHQWH; WG THZ RGOMFV XP GTHG RBXP ABOPVQBUKPZDP
+BA GTP FBMQGOL FBMKZ THOZKL AHWK GB THSP RBXP WXNBOGHQFP
+WQ ZPHKWQD UWGT H QBIKPXHQ BA GTHG FBMQGOL.
 
-const replace: Record<string, string> = {
+GOHQRLKSHQWH
+`
+
+let output = ''
+
+const data: Record<string, string> = {
   A: 'f',
   B: 'o', // !
   C: '',
@@ -34,12 +43,7 @@ const replace: Record<string, string> = {
 }
 
 for (const c of text) {
-  o += replace[c] || c
+  output += data[c] ? colors.green(data[c]) : colors.red(c)
 }
 
-for (const c of text2) {
-  o2 += replace[c] || c
-}
-
-console.log(o)
-console.log(o2)
+console.log(output)
