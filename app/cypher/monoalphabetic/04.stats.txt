@@ -1,0 +1,85 @@
+Letters usage:
+J: 25
+S: 19
+L: 18
+Y: 18
+K: 17
+E: 17
+Z: 16
+G: 16
+A: 12
+P: 12
+N: 12
+V: 5
+F: 4
+M: 4
+U: 4
+W: 3
+C: 3
+O: 3
+H: 3
+T: 3
+R: 2
+Q: 1
+
+// const onlyInput = input
+//   .split('\n\n')[0]!
+//   .replaceAll('\n', '')
+
+// const groups: Record<string, number> = {}
+// const l = 1
+// for (let i = 0; i < onlyInput.length - l; i++) {
+//   const key = onlyInput.slice(i, i + l)
+//   groups[key] ??= 0
+//   groups[key]++
+// }
+
+// console.table(Object.entries(groups).sort((a, b) => b[1] - a[1]).filter(([,value]) => value !== 1))
+
+Most used 3-letters group:
+KEJ: 3
+ASG: 2
+EJP: 2
+FSV: 2
+PJL: 2
+SPZ: 2
+GAS: 2
+EYZ: 2
+OEK: 2
+KLG: 2
+UES: 2
+
+Most used 2-letters group:
+EJ: 6
+SG: 5
+KE: 5
+JP: 5
+GA: 5
+JZ: 4
+SV: 4
+YZ: 4
+EY: 4
+
+Letters usage /w english usage:
+J . 25 . E
+S . 19 . A
+L . 18 . 
+Y . 18 . 
+K . 17 . T
+E . 17 . H
+Z . 16 . 
+G . 16 . 
+A . 12 . 
+P . 12 . 
+N . 12 . 
+V . 5  . 
+F . 4  . 
+M . 4  . 
+U . 4  . 
+W . 3  . 
+C . 3  . 
+O . 3  . 
+H . 3  . 
+T . 3  . 
+R . 2  . 
+Q . 1  . 
