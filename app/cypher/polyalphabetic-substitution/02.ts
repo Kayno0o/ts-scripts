@@ -1,4 +1,4 @@
-import { caesar, vigenereCipher } from '../utils'
+import { vigenereCipher } from '../utils'
 
 const input = 'JCWSVLIVLVGSJJFJCWCVL'
 const key = 'AAT'
