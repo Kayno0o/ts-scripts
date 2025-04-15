@@ -9,7 +9,7 @@ function main() {
   console.log(backtracking.printHTML())
 
   const prims = new GrowingTreeMaze(w, h)
-  prims.generate(() => 0)
+  prims.generate(queue => Math.floor(Math.random() * queue.length))
   console.log(prims.printHTML())
 }
 

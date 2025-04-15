@@ -1,5 +1,5 @@
 import type { Dir } from './utils'
-import { shuffleArray } from '@kaynooo/utils'
+import { randomInt, shuffleArray } from '@kaynooo/utils'
 import { Block } from './Block'
 import { DIRS } from './utils'
 
@@ -99,6 +99,9 @@ export class Maze {
   printHTML(): string {
     let html = `<table style="border-collapse: collapse;">`
 
+    const start = randomInt(this.w * this.h)
+    const end = randomInt(this.w * this.h)
+
     for (let y = 0; y < this.h; y++) {
       html += '<tr>'
       for (let x = 0; x < this.w; x++) {
@@ -111,6 +114,8 @@ export class Maze {
           'height:15px;',
           'border-style:solid;',
           'border-color:#000;',
+          start === i ? 'background-color:#0a5;' : '',
+          end === i ? 'background-color:#a0f;' : '',
         ].join('')
 
         html += `<td style="${styles}"></td>`

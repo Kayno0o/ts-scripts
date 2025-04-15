@@ -9,8 +9,10 @@
   <label>Height: <input id="height" type="range" min="1" max="100" value="45" /></label>
   <fieldset>
     <legend>Algorithm</legend>
-    <label><input type="radio" name="algo" value="backtracking" checked /> Backtracking</label>
+    <label><input type="radio" name="algo" value="backtracking" checked /> Reverse Backtracking (latest)</label>
     <label><input type="radio" name="algo" value="prims" /> Prim's</label>
+    <label><input type="radio" name="algo" value="oldest" /> Oldest</label>
+    <label><input type="radio" name="algo" value="middle" /> Middle</label>
   </fieldset>
   <div id="maze"></div>
 
@@ -40,7 +42,13 @@
         maze.generate(() => 0);
         console.log(maze.printHTML());
       } else if (algo === 'prims') {
-        maze.generate(() => 0);
+        maze.generate(queue => Math.floor(Math.random() * queue.length))
+        console.log(maze.printHTML());
+      } else if (algo === 'oldest') {
+        maze.generate(queue => queue.length-1)
+        console.log(maze.printHTML());
+      } else if (algo === 'middle') {
+        maze.generate(queue => Math.floor(queue.length/2))
         console.log(maze.printHTML());
       }
 
