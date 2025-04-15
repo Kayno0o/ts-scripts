@@ -96,8 +96,8 @@ export class Maze {
     return [-1, -1]
   }
 
-  printHTML(): string {
-    let html = `<table style="border-collapse: collapse;">`
+  printHTML(withStyle = true): string {
+    let html = `<table class="maze">`
 
     const start = randomInt(this.w * this.h)
     const end = randomInt(this.w * this.h)
@@ -108,22 +108,51 @@ export class Maze {
         const i = y * this.w + x
         const wall = this.blocks[i].wall
 
-        const styles = [
-          `border-width:${wall & 1 ? '0' : '2px'} ${wall & 2 ? '0' : '2px'} ${wall & 4 ? '0' : '2px'} ${wall & 8 ? '0' : '2px'};`,
-          'width:15px;',
-          'height:15px;',
-          'border-style:solid;',
-          'border-color:#000;',
-          start === i ? 'background-color:#0a5;' : '',
-          end === i ? 'background-color:#a0f;' : '',
-        ].join('')
+        const classes = [
+          wall & 1 || 'top',
+          wall & 2 || 'right',
+          wall & 4 || 'bottom',
+          wall & 8 || 'left',
+          start === i && 'start',
+          end === i && 'end',
+        ].filter(Boolean).join(' ')
 
-        html += `<td style="${styles}"></td>`
+        html += `<td class="${classes}"></td>`
       }
       html += '</tr>'
     }
 
     html += '</table>'
+
+    if (withStyle) {
+      html += `<style>
+      .maze {
+        border-collapse:collapse;
+        td {
+          width:15px;height:15px;border-style:solid;border-color:#000
+        }
+        td.start {
+          background-color:#0a5;
+        }
+        td.end {
+          background-color:#a0f
+        }
+        td.top {
+          border-top-width: 2px;
+        }
+        td.right {
+          border-right-width: 2px;
+        }
+        td.bottom {
+          border-bottom-width: 2px;
+        }
+        td.left {
+          border-left-width: 2px;
+        }
+      }
+      </style>`.replace(/\s+/g, '')
+    }
+
     return html
   }
 }

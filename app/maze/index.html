@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8" />
   <title>Maze Generator</title>
 </head>
+
 <body>
   <label>Width: <input id="width" type="range" min="1" max="100" value="80" /></label>
   <label>Height: <input id="height" type="range" min="1" max="100" value="45" /></label>
@@ -17,11 +19,40 @@
   <div id="maze"></div>
 
   <style>
-    table {
-      border-spacing: 0;
-    }
-    td {
-      border-radius: 10px;
+    .maze {
+      border-collapse: collapse;
+
+      td {
+        width: 15px;
+        height: 15px;
+        border-width: 0;
+        border-style: solid;
+        border-color: #000
+      }
+
+      td.start {
+        background-color: #0a5;
+      }
+
+      td.end {
+        background-color: #a0f
+      }
+
+      td.top {
+        border-top-width: 2px;
+      }
+
+      td.right {
+        border-right-width: 2px;
+      }
+
+      td.bottom {
+        border-bottom-width: 2px;
+      }
+
+      td.left {
+        border-left-width: 2px;
+      }
     }
   </style>
 
@@ -40,16 +71,16 @@
 
       if (algo === 'backtracking') {
         maze.generate(() => 0);
-        console.log(maze.printHTML());
+        console.log(maze.printHTML(false));
       } else if (algo === 'prims') {
         maze.generate(queue => Math.floor(Math.random() * queue.length))
-        console.log(maze.printHTML());
+        console.log(maze.printHTML(false));
       } else if (algo === 'oldest') {
-        maze.generate(queue => queue.length-1)
-        console.log(maze.printHTML());
+        maze.generate(queue => queue.length - 1)
+        console.log(maze.printHTML(false));
       } else if (algo === 'middle') {
-        maze.generate(queue => Math.floor(queue.length/2))
-        console.log(maze.printHTML());
+        maze.generate(queue => Math.floor(queue.length / 2))
+        console.log(maze.printHTML(false));
       }
 
       mazeEl.innerHTML = maze.printHTML();
@@ -62,4 +93,5 @@
     generateMaze();
   </script>
 </body>
+
 </html>
