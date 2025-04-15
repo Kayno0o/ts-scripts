@@ -96,63 +96,43 @@ export class Maze {
     return [-1, -1]
   }
 
-  printHTML(withStyle = true): string {
-    let html = `<table class="maze">`
+  printHTML(): HTMLElement {
+    const table = document.createElement('table')
+    table.className = 'maze'
 
     const start = randomInt(this.w * this.h)
     const end = randomInt(this.w * this.h)
 
     for (let y = 0; y < this.h; y++) {
-      html += '<tr>'
+      const row = document.createElement('tr')
+
       for (let x = 0; x < this.w; x++) {
         const i = y * this.w + x
         const wall = this.blocks[i].wall
 
-        const classes = [
-          wall & 1 || 'top',
-          wall & 2 || 'right',
-          wall & 4 || 'bottom',
-          wall & 8 || 'left',
-          start === i && 'start',
-          end === i && 'end',
-        ].filter(Boolean).join(' ')
+        const cell = document.createElement('td')
+        const cls: string[] = []
 
-        html += `<td class="${classes}"></td>`
+        if (!(wall & 1))
+          cls.push('t')
+        if (!(wall & 2))
+          cls.push('r')
+        if (!(wall & 4))
+          cls.push('b')
+        if (!(wall & 8))
+          cls.push('l')
+        if (i === start)
+          cls.push('s')
+        if (i === end)
+          cls.push('e')
+
+        cell.className = cls.join(' ')
+        row.appendChild(cell)
       }
-      html += '</tr>'
+
+      table.appendChild(row)
     }
 
-    html += '</table>'
-
-    if (withStyle) {
-      html += `<style>
-      .maze {
-        border-collapse:collapse;
-        td {
-          width:15px;height:15px;border-style:solid;border-color:#000
-        }
-        td.start {
-          background-color:#0a5;
-        }
-        td.end {
-          background-color:#a0f
-        }
-        td.top {
-          border-top-width: 2px;
-        }
-        td.right {
-          border-right-width: 2px;
-        }
-        td.bottom {
-          border-bottom-width: 2px;
-        }
-        td.left {
-          border-left-width: 2px;
-        }
-      }
-      </style>`.replace(/\s+/g, '')
-    }
-
-    return html
+    return table
   }
 }

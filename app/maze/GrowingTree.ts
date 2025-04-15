@@ -30,8 +30,3 @@ export class GrowingTreeMaze extends Maze {
     }
   }
 }
-
-if (typeof window !== 'undefined') {
-  // @ts-expect-error browser compat
-  window.GrowingTreeMaze = GrowingTreeMaze
-}

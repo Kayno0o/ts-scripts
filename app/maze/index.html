@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Maze Generator</title>
+  <link rel="stylesheet" href="main.css">
 </head>
 
 <body>
@@ -11,87 +12,14 @@
   <label>Height: <input id="height" type="range" min="1" max="100" value="45" /></label>
   <fieldset>
     <legend>Algorithm</legend>
-    <label><input type="radio" name="algo" value="backtracking" checked /> Reverse Backtracking (latest)</label>
+    <label><input type="radio" name="algo" value="backtracking" checked /> Reverse Backtracking</label>
     <label><input type="radio" name="algo" value="prims" /> Prim's</label>
     <label><input type="radio" name="algo" value="oldest" /> Oldest</label>
     <label><input type="radio" name="algo" value="middle" /> Middle</label>
+    <label><input type="radio" name="algo" value="alternating" /> Alternating</label>
   </fieldset>
   <div id="maze"></div>
-
-  <style>
-    .maze {
-      border-collapse: collapse;
-
-      td {
-        width: 15px;
-        height: 15px;
-        border-width: 0;
-        border-style: solid;
-        border-color: #000
-      }
-
-      td.start {
-        background-color: #0a5;
-      }
-
-      td.end {
-        background-color: #a0f
-      }
-
-      td.top {
-        border-top-width: 2px;
-      }
-
-      td.right {
-        border-right-width: 2px;
-      }
-
-      td.bottom {
-        border-bottom-width: 2px;
-      }
-
-      td.left {
-        border-left-width: 2px;
-      }
-    }
-  </style>
-
-  <script src="./index.js"></script>
-  <script>
-    const widthInput = document.getElementById('width');
-    const heightInput = document.getElementById('height');
-    const mazeEl = document.getElementById('maze');
-    const algoInputs = document.querySelectorAll('input[name="algo"]');
-
-    function generateMaze() {
-      const w = parseInt(widthInput.value);
-      const h = parseInt(heightInput.value);
-      const algo = document.querySelector('input[name="algo"]:checked').value;
-      const maze = new GrowingTreeMaze(w, h);
-
-      if (algo === 'backtracking') {
-        maze.generate(() => 0);
-        console.log(maze.printHTML(false));
-      } else if (algo === 'prims') {
-        maze.generate(queue => Math.floor(Math.random() * queue.length))
-        console.log(maze.printHTML(false));
-      } else if (algo === 'oldest') {
-        maze.generate(queue => queue.length - 1)
-        console.log(maze.printHTML(false));
-      } else if (algo === 'middle') {
-        maze.generate(queue => Math.floor(queue.length / 2))
-        console.log(maze.printHTML(false));
-      }
-
-      mazeEl.innerHTML = maze.printHTML();
-    }
-
-    widthInput.addEventListener('input', generateMaze);
-    heightInput.addEventListener('input', generateMaze);
-    algoInputs.forEach(input => input.addEventListener('change', generateMaze));
-
-    generateMaze();
-  </script>
+  <script src="./app.ts"></script>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 build:
-	bun build GrowingTree.ts --minify --outfile index.js --production --target=browser --format=iife
+	bun build index.html --minify --outdir=dist
 
 watch:
-	bun build GrowingTree.ts --outfile index.js --target=browser --format=iife --watch
+	bun build index.html --outdir=dist --watch
