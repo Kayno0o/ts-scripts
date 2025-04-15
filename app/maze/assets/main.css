@@ -1,0 +1,83 @@
+
+.maze {
+  border-collapse: collapse;
+  margin: 10px;
+
+  td {
+    width: 10px;
+    height: 10px;
+    border-width: 0;
+    border-style: solid;
+    border-color: #000
+  }
+
+  td.t {
+    border-top-width: 2px;
+  }
+
+  td.r {
+    border-right-width: 2px;
+  }
+
+  td.b {
+    border-bottom-width: 2px;
+  }
+
+  td.l {
+    border-left-width: 2px;
+  }
+
+  td.s, td.e {
+    position: relative;
+
+    &::after {
+      display: block;
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      inset: 0;
+      border-color: black;
+      border-style: solid;
+      /* box-sizing: border-box; */
+    }
+
+    &.side-1::after {
+      /* bottom: 100%; */
+      translate: -2px -100%;
+    }
+
+    &.side-2::after {
+      /* left: 100%; */
+      translate: 200% -2px;
+    }
+
+    &.side-4::after {
+      /* top: 100%; */
+      translate: -2px 200%;
+    }
+
+    &.side-8::after {
+      /* right: 100%; */
+      translate: -100% -2px;
+    }
+
+    &.side-2::after, &.side-8::after {
+      border-width: 2px 0;
+      width: 50%;
+    }
+
+    &.side-1::after, &.side-4::after {
+      border-width: 0 2px;
+      height: 50%;
+    }
+  }
+/* 
+  td.s {
+    background-color: #0a5;
+  }
+
+  td.e {
+    background-color: #a0f
+  } */
+}

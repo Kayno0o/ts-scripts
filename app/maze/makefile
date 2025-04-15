@@ -1,4 +1,5 @@
 build:
+	rm -rf dist
 	bun build index.html --minify --outdir=dist
 
 watch:

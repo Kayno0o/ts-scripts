@@ -1,4 +1,4 @@
-import { GrowingTreeMaze } from './GrowingTree'
+import { GrowingTreeMaze } from './src/GrowingTree'
 
 const widthInput = document.getElementById('width') as HTMLInputElement
 const heightInput = document.getElementById('height') as HTMLInputElement

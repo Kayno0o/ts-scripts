@@ -96,12 +96,36 @@ export class Maze {
     return [-1, -1]
   }
 
+  getEdgeIndex(side: Dir): number {
+    switch (side) {
+      case 1:
+        return randomInt(this.w)
+      case 2:
+        return randomInt(this.h) * this.w + (this.w - 1)
+      case 4:
+        return (this.h - 1) * this.w + randomInt(this.w)
+      case 8:
+        return randomInt(this.h) * this.w
+      default:
+        return 0
+    }
+  }
+
   printHTML(): HTMLElement {
     const table = document.createElement('table')
     table.className = 'maze'
 
-    const start = randomInt(this.w * this.h)
-    const end = randomInt(this.w * this.h)
+    const sides: Dir[] = [1, 2, 4, 8]
+    const startSideIndex = randomInt(4)
+    const startSide = sides[startSideIndex]
+    const start = this.getEdgeIndex(startSide)
+    this.blocks[start].wall |= startSide
+
+    sides.splice(startSideIndex, 1)
+    const endSideIndex = randomInt(3)
+    const endSide = sides[endSideIndex]
+    const end = this.getEdgeIndex(endSide)
+    this.blocks[end].wall |= endSide
 
     for (let y = 0; y < this.h; y++) {
       const row = document.createElement('tr')
@@ -122,9 +146,9 @@ export class Maze {
         if (!(wall & 8))
           cls.push('l')
         if (i === start)
-          cls.push('s')
+          cls.push(`s side-${startSide}`)
         if (i === end)
-          cls.push('e')
+          cls.push(`e side-${endSide}`)
 
         cell.className = cls.join(' ')
         row.appendChild(cell)
