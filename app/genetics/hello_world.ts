@@ -36,10 +36,15 @@ let population: Individual[] = Array.from({ length: populationSize }, () => {
   return { genes, fitness: calcFitness(genes) }
 })
 
-let generation = 0
+let generation = 1
 
-while (!population.some(ind => ind.genes === target)) {
+do {
   population.sort((a, b) => b.fitness - a.fitness)
+  if (generation % 10 === 0) {
+    const best = population[0]
+    console.log(`Gen ${generation} | Best: ${best.genes} (${(best.fitness * 100).toFixed(1)}%)`)
+  }
+
   const matingPool = population.slice(0, populationSize / 2)
   const newPopulation: Individual[] = []
 
@@ -52,11 +57,6 @@ while (!population.some(ind => ind.genes === target)) {
 
   population = newPopulation
   generation++
-
-  if (generation % 10 === 0) {
-    const best = population[0]
-    console.log(`Gen ${generation} | Best: ${best.genes} (${(best.fitness * 100).toFixed(1)}%)`)
-  }
-}
+} while (!population.some(ind => ind.genes === target))
 
 console.log(`Success in generation ${generation}`)

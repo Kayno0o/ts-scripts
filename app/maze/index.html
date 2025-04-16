@@ -8,8 +8,8 @@
 </head>
 
 <body>
-  <label>Width: <input id="width" type="range" min="1" max="100" value="80" /></label>
-  <label>Height: <input id="height" type="range" min="1" max="100" value="45" /></label>
+  <label>Width: <input id="width" type="number" min="1" max="100" value="25" /></label>
+  <label>Height: <input id="height" type="number" min="1" max="100" value="25" /></label>
   <fieldset>
     <legend>Algorithm</legend>
     <label><input type="radio" name="algo" value="backtracking" checked /> Reverse Backtracking</label>
@@ -17,6 +17,15 @@
     <label><input type="radio" name="algo" value="oldest" /> Oldest</label>
     <label><input type="radio" name="algo" value="middle" /> Middle</label>
     <label><input type="radio" name="algo" value="alternating" /> Alternating</label>
+  </fieldset>
+  <fieldset>
+    <legend>Genetics</legend>
+    <label>PopulationSize: <input id="population-size" type="number" step="10" min="1" max="1000" value="100" /></label>
+    <label>MutationRate: <input id="mutation-rate" type="number" step="0.01" min="0" max="1" value="0.01" /></label>
+    <label>BestPopulationRate: <input id="best-population-rate" type="number" step="0.1" min="0" max="1" value="0.8" /></label>
+    <label>MaxGeneration: <input id="max-generation" type="number" step="10" min="1" max="1000" value="100" /></label>
+    <button id="solve">Solve</button>
+    <progress id="genetic-progress" value="0" max="0" hidden></progress>
   </fieldset>
   <div id="maze"></div>
   <script src="./app.ts"></script>

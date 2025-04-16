@@ -1,95 +1,87 @@
 import type { Dir } from './utils'
 import { randomInt, shuffleArray } from '@kaynooo/utils'
-import { Block } from './Block'
 import { DIRS } from './utils'
 
 export class Maze {
   w: number
   h: number
-  blocks: Block[]
+  start: number
+  end: number
+  startSide: Dir
+  endSide: Dir
+  blocks: number[]
 
-  constructor(w: number, h: number) {
+  constructor(
+    w: number,
+    h: number,
+    data?: {
+      blocks?: number[]
+      start?: number
+      end?: number
+      startSide?: Dir
+      endSide?: Dir
+    },
+  ) {
     this.w = w
     this.h = h
 
-    this.blocks = []
-    for (let i = 0; i < w * h; i++) {
-      this.blocks[i] = new Block(i, 0, 0)
-    }
+    this.blocks = data?.blocks || new Array(w * h).fill(0)
+
+    const sides: Dir[] = [1, 2, 4, 8]
+    const startSideIndex = randomInt(4)
+    this.startSide = data?.startSide ?? sides[startSideIndex]
+    this.start = data?.start || this.getEdgeIndex(this.startSide)
+
+    sides.splice(startSideIndex, 1)
+    const endSideIndex = randomInt(3)
+    this.endSide = data?.endSide ?? sides[endSideIndex]
+    this.end = data?.end || this.getEdgeIndex(this.endSide)
   }
 
-  getBlock(pos: number, dir: number): number {
-    let newPos = -1
+  // eslint-disable-next-line ts/no-empty-function
+  generate(..._args: any): void {}
 
-    switch (dir) {
-      case 1:
-        if (pos >= this.w) {
-          newPos = (pos - this.w)
-        }
-        break
-      case 2:
-        if ((pos + 1) % this.w !== 0) {
-          newPos = (pos + 1)
-        }
-        break
-      case 4:
-        if (pos < this.w * (this.h - 1)) {
-          newPos = (pos + this.w)
-        }
-        break
-      case 8:
-        if (pos % this.w !== 0) {
-          newPos = (pos - 1)
-        }
-        break
-    }
+  getBlock(pos: number, dir: Dir): number {
+    if (dir === 1 && pos >= this.w)
+      return pos - this.w
+    if (dir === 2 && (pos + 1) % this.w !== 0)
+      return pos + 1
+    if (dir === 4 && pos < this.w * (this.h - 1))
+      return pos + this.w
+    if (dir === 8 && pos % this.w !== 0)
+      return pos - 1
 
-    if (newPos < 0 || newPos >= this.w * this.h) {
-      return -1
-    }
+    return -1
+  }
 
-    return newPos
+  canMoveToBlock(pos: number, dir: Dir): boolean {
+    return (this.blocks[pos] & dir) !== 0
   }
 
   getNeighbours(pos: number): number[] {
-    const neighbours: number[] = []
-
-    for (const dir of DIRS) {
-      const newPos = this.getBlock(pos, dir)
-
-      if (newPos === -1)
-        continue
-
-      neighbours.push(newPos)
-    }
-
-    return neighbours
+    return DIRS.reduce((acc, dir) => {
+      const p = this.getBlock(pos, dir)
+      if (p !== -1)
+        acc.push(p)
+      return acc
+    }, [] as number[])
   }
 
   getNonVisitedNeighbours(pos: number): number[] {
-    const nonVisitedNeighbours: number[] = []
-    const neighbours = this.getNeighbours(pos)
-
-    for (const neighbour of neighbours) {
-      if (this.blocks[neighbour].wall !== 0)
-        continue
-
-      nonVisitedNeighbours.push(neighbour)
-    }
-
-    return nonVisitedNeighbours
+    return DIRS.reduce((acc, dir) => {
+      const p = this.getBlock(pos, dir)
+      if (p !== -1 && this.blocks[p] === 0)
+        acc.push(p)
+      return acc
+    }, [] as number[])
   }
 
   randomNonVisitedNeighbour(pos: number): [newPos: number, dir: Dir | -1] {
-    const clonedDirs = [...DIRS]
-    shuffleArray(clonedDirs)
+    shuffleArray(DIRS)
 
-    for (const dir of clonedDirs) {
+    for (const dir of DIRS) {
       const newPos = this.getBlock(pos, dir)
-      if (newPos === -1)
-        continue
-
-      if (this.blocks[newPos].wall === 0)
+      if (newPos !== -1 && this.blocks[newPos] === 0)
         return [newPos, dir]
     }
 
@@ -111,28 +103,44 @@ export class Maze {
     }
   }
 
-  printHTML(): HTMLElement {
+  getExploredPosFromPath(path: string): Set<number> {
+    let pos = this.start
+    const positions = new Set<number>([pos])
+
+    for (const char of path) {
+      const dir = Number(char) as Dir
+      if (!this.canMoveToBlock(pos, dir))
+        continue
+
+      const nextPos = this.getBlock(pos, dir)
+      if (nextPos === -1)
+        continue
+
+      pos = nextPos
+      positions.add(pos)
+    }
+
+    return positions
+  }
+
+  printHTML(path?: string): HTMLElement {
     const table = document.createElement('table')
     table.className = 'maze'
 
-    const sides: Dir[] = [1, 2, 4, 8]
-    const startSideIndex = randomInt(4)
-    const startSide = sides[startSideIndex]
-    const start = this.getEdgeIndex(startSide)
-    this.blocks[start].wall |= startSide
-
-    sides.splice(startSideIndex, 1)
-    const endSideIndex = randomInt(3)
-    const endSide = sides[endSideIndex]
-    const end = this.getEdgeIndex(endSide)
-    this.blocks[end].wall |= endSide
+    let positions = new Set<number>()
+    if (path)
+      positions = this.getExploredPosFromPath(path)
 
     for (let y = 0; y < this.h; y++) {
       const row = document.createElement('tr')
 
       for (let x = 0; x < this.w; x++) {
         const i = y * this.w + x
-        const wall = this.blocks[i].wall
+        let wall = this.blocks[i]
+        if (i === this.start)
+          wall |= this.startSide
+        if (i === this.end)
+          wall |= this.endSide
 
         const cell = document.createElement('td')
         const cls: string[] = []
@@ -145,10 +153,12 @@ export class Maze {
           cls.push('b')
         if (!(wall & 8))
           cls.push('l')
-        if (i === start)
-          cls.push(`s side-${startSide}`)
-        if (i === end)
-          cls.push(`e side-${endSide}`)
+        if (i === this.start)
+          cls.push(`s side-${this.startSide}`)
+        if (i === this.end)
+          cls.push(`e side-${this.endSide}`)
+        if (positions.has(i))
+          cls.push('explored')
 
         cell.className = cls.join(' ')
         row.appendChild(cell)
@@ -158,5 +168,34 @@ export class Maze {
     }
 
     return table
+  }
+
+  static loadFromString<T extends typeof Maze>(this: T, maze: string): InstanceType<T> {
+    const [w, start, end, startSide, endSide, path] = maze.split('_')
+
+    const blocks = Array.from(path, dir => Number.parseInt(dir, 16))
+
+    return new this(
+      Number(w),
+      Math.floor(path.length / Number(w)),
+      {
+        blocks,
+        start: Number(start),
+        end: Number(end),
+        startSide: Number(startSide) as Dir,
+        endSide: Number(endSide) as Dir,
+      },
+    ) as InstanceType<T>
+  }
+
+  toString(): string {
+    return [
+      this.w,
+      this.start,
+      this.end,
+      this.startSide,
+      this.endSide,
+      this.blocks.map(block => block.toString(16)).join(''),
+    ].join('_')
   }
 }

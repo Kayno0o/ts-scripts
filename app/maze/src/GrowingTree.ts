@@ -7,8 +7,6 @@ export class GrowingTreeMaze extends Maze {
     const start = randomInt(this.w * this.h)
     const queue: number[] = [start]
 
-    let order = 0
-
     while (queue.length) {
       const i = getCell(queue)
       const pos = queue[i]
@@ -19,12 +17,8 @@ export class GrowingTreeMaze extends Maze {
         continue
       }
 
-      this.blocks[pos].wall |= dir
-
-      this.blocks[newPos].wall |= reverseWall(dir)
-      this.blocks[newPos].order = order
-
-      order++
+      this.blocks[pos] |= dir
+      this.blocks[newPos] |= reverseWall(dir)
 
       queue.unshift(newPos)
     }
